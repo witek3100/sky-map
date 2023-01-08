@@ -2,7 +2,6 @@ import json
 import requests
 import re
 import subprocess
-import os
 
 base_geolocation_api_url = "https://www.googleapis.com/geolocation/v1/geolocate?key="    #adres url do google geolocation api
 base_geocoding_api_url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="    #adres url go google geocoding api
