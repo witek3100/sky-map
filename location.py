@@ -39,12 +39,12 @@ class LocationApi:
             loc = response.json()
             lat = loc['location']['lat']
             lng = loc['location']['lng']
+            complete_geocoding_api_url = f"{base_geocoding_api_url}{lat},{lng}&key={api_key}"  # żądanie do geocoding api
             if 'error' in loc.keys():
                 raise  requests.RequestException()
         except Exception as e:
             print(e)
 
-        complete_geocoding_api_url = f"{base_geocoding_api_url}{lat},{lng}&key={api_key}"     #żądanie do geocoding api
         try:
             cresponse = requests.get(complete_geocoding_api_url)
             cloc = cresponse.json()

@@ -60,6 +60,23 @@ sun_x, sun_y = projection(sun_position)
 chart_size = 10
 fig, ax = plt.subplots(figsize=(chart_size, chart_size))
 
+
+star_positions = earth.at(t).observe(Star.from_dataframe(stars))
+stars['x'], stars['y'] = projection(star_positions)
+
+chart_size = 10
+max_star_size = 100
+limiting_magnitude = 10
+
+bright_stars = (stars.magnitude <= limiting_magnitude)
+magnitude = stars['magnitude'][bright_stars]
+
+marker_size = max_star_size * 10 ** (magnitude / -2.5)
+
+scatter = ax.scatter(stars['x'][bright_stars], stars['y'][bright_stars],
+ s=marker_size, color='white', marker='.', linewidths=0,
+ zorder=2)
+
 border = plt.Circle((0, 0), 1, color='black', fill=True)
 ax.add_patch(border)
 
@@ -79,17 +96,7 @@ ax.scatter(sun_x, sun_y,
            s=2000, color='yellow', marker='.', linewidths=0,
            zorder=2)
 
-max_star_size = 50000
-bright_stars = stars[stars['magnitude'] > 10]
-magnitude = bright_stars['magnitude']
-star_positions = earth.at(t).observe(Star.from_dataframe(bright_stars))
-bright_stars['x'], bright_stars['y'] = projection(star_positions)
-bright_stars['marker size'] = max_star_size * 10 ** (bright_stars['magnitude'] / -2.5)
-ax.scatter(bright_stars['x'], bright_stars['y'],
-           s=bright_stars['marker size'], color='white', marker='.', linewidths=0,
-           zorder=2)
 
-print(bright_stars['marker size'])
 # sun_light = plt.Circle((sun_x, sun_y), 0.8, color='blue', fill=True)
 # ax.add_patch(sun_light)
 
