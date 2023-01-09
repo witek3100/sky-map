@@ -14,6 +14,7 @@ from skyfield.api import Star, load, wgs84, load_constellation_map, position_of_
 from skyfield.data import hipparcos, stellarium
 from skyfield.projections import build_stereographic_projection
 import location
+import constelations
 import pandas
 
 eph = load('de421.bsp')
@@ -96,15 +97,22 @@ ax.scatter(sun_x, sun_y,
 # sun_light = plt.Circle((sun_x, sun_y), 0.8, color='blue', fill=True)
 # ax.add_patch(sun_light)
 
-
-horizon = Circle((0, 0), radius=1, transform=ax.transData)
-for col in ax.collections:
-    col.set_clip_path(horizon)
-
+# xs = []
+# ys = []
+# for i in constelations.constelations['Pic']:
+#     xs.append(stars.iloc[i]['x'])
+#     ys.append(stars.iloc[i]['y'])
+# for i in range(len(xs)):
+#     ax.plot([xs[i], xs[i]+1], [ys[i], ys[i]+1], 'bo')
+#
+# horizon = Circle((0, 0), radius=1, transform=ax.transData)
+# for col in ax.collections:
+#     col.set_clip_path(horizon)
 
 
 # other settings
 ax.set_xlim(-1, 1)
 ax.set_ylim(-1, 1)
 plt.axis('off')
+
 plt.show()
