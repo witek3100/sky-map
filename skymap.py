@@ -1,20 +1,17 @@
-# datetime libraries
 import json
 import os
-from datetime import datetime
 import datetime as datetime
 import numpy as np
 import pytz
+import skyfield.api
 from geopy import Nominatim
 from matplotlib.patches import Circle
 from tzwhere import tzwhere
 from pytz import timezone, utc
-# matplotlib to help display our star map
 import matplotlib.pyplot as plt
 from matplotlib import *
-# skyfield for star data
-from skyfield.api import Star, load, wgs84
-from skyfield.data import hipparcos
+from skyfield.api import Star, load, wgs84, load_constellation_map, position_of_radec, load_constellation_names
+from skyfield.data import hipparcos, stellarium
 from skyfield.projections import build_stereographic_projection
 import location
 import pandas
@@ -60,12 +57,11 @@ sun_x, sun_y = projection(sun_position)
 chart_size = 10
 fig, ax = plt.subplots(figsize=(chart_size, chart_size))
 
-
 star_positions = earth.at(t).observe(Star.from_dataframe(stars))
 stars['x'], stars['y'] = projection(star_positions)
 
 chart_size = 10
-max_star_size = 100
+max_star_size = 50
 limiting_magnitude = 10
 
 bright_stars = (stars.magnitude <= limiting_magnitude)
@@ -85,7 +81,7 @@ ax.scatter(mars_x, mars_y,
            zorder=2)
 
 ax.scatter(uranus_x, uranus_y,
-           s=1000, color='blue', marker='.', linewidths=0,
+           s=200, color='blue', marker='.', linewidths=0,
            zorder=2)
 
 ax.scatter(moon_x, moon_y,
@@ -100,9 +96,11 @@ ax.scatter(sun_x, sun_y,
 # sun_light = plt.Circle((sun_x, sun_y), 0.8, color='blue', fill=True)
 # ax.add_patch(sun_light)
 
+
 horizon = Circle((0, 0), radius=1, transform=ax.transData)
 for col in ax.collections:
     col.set_clip_path(horizon)
+
 
 
 # other settings
