@@ -44,7 +44,7 @@ class LocationApi:
         except Exception as e:
             print(e)
 
-        complete_geocoding_api_url = base_geocoding_api_url + str(lat) + "," + str(lng) + "&key=" + api_key     #żądanie do geocoding api
+        complete_geocoding_api_url = f"{base_geocoding_api_url}{lat},{lng}&key={api_key}"     #żądanie do geocoding api
         try:
             cresponse = requests.get(complete_geocoding_api_url)
             cloc = cresponse.json()

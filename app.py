@@ -2,8 +2,8 @@
 import json
 import os
 from datetime import datetime
-
 import datetime as datetime
+import numpy as np
 import pytz
 from geopy import Nominatim
 from matplotlib.patches import Circle
@@ -11,6 +11,7 @@ from tzwhere import tzwhere
 from pytz import timezone, utc
 # matplotlib to help display our star map
 import matplotlib.pyplot as plt
+from matplotlib import *
 # skyfield for star data
 from skyfield.api import Star, load, wgs84
 from skyfield.data import hipparcos
@@ -38,6 +39,7 @@ position = observer.from_altaz(alt_degrees=90, az_degrees=0)
 ra, dec, distance = observer.radec()
 center_object = Star(ra=ra, dec=dec)
 earth = eph['earth']
+sun = eph['sun']
 mars = eph['mars']
 uranus = eph['URANUS BARYCENTER']
 moon = eph['moon']
@@ -54,19 +56,17 @@ uranus_position = earth.at(t).observe(uranus)
 uranus_x, uranus_y = projection(uranus_position)
 moon_position = earth.at(t).observe(moon)
 moon_x, moon_y = projection(moon_position)
-
-print(f"{mars_x} {mars_y}")
-print(f"{moon_x} {moon_y}")
-print(f"{uranus_x} {uranus_y}")
+sun_position = earth.at(t).observe(sun)
+sun_x, sun_y = projection(sun_position)
 
 chart_size = 10
 fig, ax = plt.subplots(figsize=(chart_size, chart_size))
 
-border = plt.Circle((0, 0), 1, color='navy', fill=True)
+border = plt.Circle((0, 0), 1, color='black', fill=True)
 ax.add_patch(border)
 
 ax.scatter(mars_x, mars_y,
-           s=1000, color='red', marker='.', linewidths=0,
+           s=200, color='red', marker='.', linewidths=0,
            zorder=2)
 
 ax.scatter(uranus_x, uranus_y,
@@ -74,15 +74,19 @@ ax.scatter(uranus_x, uranus_y,
            zorder=2)
 
 ax.scatter(moon_x, moon_y,
-           s=1000, color='grey', marker='o', linewidths=0,
+           s=250, color='grey', marker='o', linewidths=0,
            zorder=2)
 
+ax.scatter(sun_x, sun_y,
+           s=2000, color='yellow', marker='.', linewidths=0,
+           zorder=2)
+# sun_light = plt.Circle((sun_x, sun_y), 0.8, color=, fill=True)
+# ax.add_patch(sun_light)
+
 horizon = Circle((0, 0), radius=1, transform=ax.transData)
-for col in ax.collections:
-    col.set_clip_path(horizon)
 
 # other settings
-ax.set_xlim(-1, 1)
-ax.set_ylim(-1, 1)
+ax.set_xlim(-1.2, 1.2)
+ax.set_ylim(-1.2, 1.2)
 plt.axis('off')
 plt.show()
