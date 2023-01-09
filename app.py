@@ -44,9 +44,7 @@ mars = eph['mars']
 uranus = eph['URANUS BARYCENTER']
 moon = eph['moon']
 
-
 center = earth.at(t).observe(center_object)
-
 projection = build_stereographic_projection(center)
 field_of_view_degrees = 180.0
 
@@ -80,13 +78,28 @@ ax.scatter(moon_x, moon_y,
 ax.scatter(sun_x, sun_y,
            s=2000, color='yellow', marker='.', linewidths=0,
            zorder=2)
-# sun_light = plt.Circle((sun_x, sun_y), 0.8, color=, fill=True)
+
+max_star_size = 50000
+bright_stars = stars[stars['magnitude'] > 10]
+magnitude = bright_stars['magnitude']
+star_positions = earth.at(t).observe(Star.from_dataframe(bright_stars))
+bright_stars['x'], bright_stars['y'] = projection(star_positions)
+bright_stars['marker size'] = max_star_size * 10 ** (bright_stars['magnitude'] / -2.5)
+ax.scatter(bright_stars['x'], bright_stars['y'],
+           s=bright_stars['marker size'], color='white', marker='.', linewidths=0,
+           zorder=2)
+
+print(bright_stars['marker size'])
+# sun_light = plt.Circle((sun_x, sun_y), 0.8, color='blue', fill=True)
 # ax.add_patch(sun_light)
 
 horizon = Circle((0, 0), radius=1, transform=ax.transData)
+for col in ax.collections:
+    col.set_clip_path(horizon)
+
 
 # other settings
-ax.set_xlim(-1.2, 1.2)
-ax.set_ylim(-1.2, 1.2)
+ax.set_xlim(-1, 1)
+ax.set_ylim(-1, 1)
 plt.axis('off')
 plt.show()
