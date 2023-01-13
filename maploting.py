@@ -33,8 +33,11 @@ with open(os.path.relpath("loc.json")) as loc_file:
     lat = loc["results"][1]['geometry']['location']['lat']
     lon = loc["results"][1]['geometry']['location']['lng']
 
-utc_dt = datetime.datetime.now(tz=pytz.UTC)
-t = load.timescale().utc(utc_dt)
+# utc_dt = datetime.datetime.now(tz=pytz.UTC)
+# t = load.timescale().utc(utc_dt)
+
+ts = load.timescale()
+t = ts.tt(2000, 1, 1, 12, 0)
 
 observer = wgs84.latlon(latitude_degrees=lat, longitude_degrees=lon).at(t)
 position = observer.from_altaz(alt_degrees=90, az_degrees=0)
@@ -61,7 +64,7 @@ sun_position = earth.at(t).observe(sun)
 sun_x, sun_y = projection(sun_position)
 
 chart_size = 10
-ax = plt.gca()
+fig,ax = plt.subplots()
 
 star_positions = earth.at(t).observe(Star.from_dataframe(stars))
 stars['x'], stars['y'] = projection(star_positions)
@@ -82,39 +85,60 @@ border = plt.Circle((0, 0), 1, color='black', fill=True)
 ax.add_patch(border)
 
 ax.scatter(mars_x, mars_y,
-           s=200, color='red', marker='.', linewidths=0,
+           s=100, color='red', marker='.', linewidths=0,
            zorder=2)
 
 ax.scatter(uranus_x, uranus_y,
-           s=200, color='yellow', marker='.', linewidths=0,
+           s=100, color='blue', marker='.', linewidths=0,
            zorder=2)
 
 ax.scatter(moon_x, moon_y,
-           s=250, color='grey', marker='o', linewidths=0,
+           s=150, color='grey', marker='o', linewidths=0,
            zorder=2)
 
-W, H = 650, 650
-bx = plt.gca()
-img=mpimg.imread("sun_light.png")
-imgplot = bx.imshow(img)
-transform = mpl.transforms.Affine2D().translate(0, 0.5)
-imgplot.set_transform(transform + bx.transData)
-
-ax.scatter(sun_x, sun_y,
-           s=2000, color='yellow', marker='.', linewidths=0,
+sun = ax.scatter(sun_x, sun_y,
+           s=500, color='yellow', marker='.', linewidths=0,
            zorder=2)
-
-
-file = "sun_light.png"
-sun_light = mpimg.imread(file)
-imagebox = OffsetImage(sun_light, zoom = 0.15)
-ab = AnnotationBbox(imagebox, (5, 700), frameon = False)
-ax.add_artist(ab)
-
 
 horizon = Circle((0, 0), radius=1, transform=ax.transData)
 for col in ax.collections:
     col.set_clip_path(horizon)
+
+file = "sun_light.png"
+sun_light = mpimg.imread(file)
+imagebox = OffsetImage(sun_light, zoom = 0.35)
+ab = AnnotationBbox(imagebox, (sun_x, sun_y), frameon = False)
+ax.add_artist(ab)
+
+cmap = plt.cm.RdYlGn
+annot = ax.annotate("", xy=(0,0), xytext=(20,20),textcoords="offset points",
+                    bbox=dict(boxstyle="round", fc="w"),
+                    arrowprops=dict(arrowstyle="->"))
+annot.set_visible(False)
+def update_annot(ind):
+
+    pos = sun.get_offsets()[ind["ind"][0]]
+    annot.xy = pos
+    text = "{}, {}".format(" ".join(list(map(str,ind["ind"]))),
+                           " ".join(['g' for n in ind["ind"]]))
+    annot.set_text(text)
+    annot.get_bbox_patch().set_alpha(0.4)
+
+
+def hover(event):
+    vis = annot.get_visible()
+    if event.inaxes == ax:
+        cont, ind = sun.contains(event)
+        if cont:
+            update_annot(ind)
+            annot.set_visible(True)
+            fig.canvas.draw_idle()
+        else:
+            if vis:
+                annot.set_visible(False)
+                fig.canvas.draw_idle()
+
+fig.canvas.mpl_connect("motion_notify_event", hover)
 
 ax.set_xlim(-1, 1)
 ax.set_ylim(-1, 1)
