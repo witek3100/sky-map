@@ -3,10 +3,13 @@ import os
 import datetime as datetime
 import numpy as np
 import pytz
+from matplotlib.colors import LinearSegmentedColormap
 import skyfield.api
 from geopy import Nominatim
 from matplotlib.patches import Circle
 from tzwhere import tzwhere
+import matplotlib.image as mpimg
+import matplotlib as mpl
 from pytz import timezone, utc
 import matplotlib.pyplot as plt
 from matplotlib import *
@@ -14,6 +17,8 @@ from skyfield.api import Star, load, wgs84, load_constellation_map, position_of_
 from skyfield.data import hipparcos, stellarium
 from skyfield.projections import build_stereographic_projection
 import location
+from PIL import Image
+from matplotlib.offsetbox import (OffsetImage, AnnotationBbox)
 import constelations
 import pandas
 
@@ -56,12 +61,11 @@ sun_position = earth.at(t).observe(sun)
 sun_x, sun_y = projection(sun_position)
 
 chart_size = 10
-fig, ax = plt.subplots(figsize=(chart_size, chart_size))
+ax = plt.gca()
 
 star_positions = earth.at(t).observe(Star.from_dataframe(stars))
 stars['x'], stars['y'] = projection(star_positions)
 
-chart_size = 10
 max_star_size = 50
 limiting_magnitude = 10
 
@@ -82,37 +86,38 @@ ax.scatter(mars_x, mars_y,
            zorder=2)
 
 ax.scatter(uranus_x, uranus_y,
-           s=200, color='blue', marker='.', linewidths=0,
+           s=200, color='yellow', marker='.', linewidths=0,
            zorder=2)
 
 ax.scatter(moon_x, moon_y,
            s=250, color='grey', marker='o', linewidths=0,
            zorder=2)
 
+W, H = 650, 650
+bx = plt.gca()
+img=mpimg.imread("sun_light.png")
+imgplot = bx.imshow(img)
+transform = mpl.transforms.Affine2D().translate(0, 0.5)
+imgplot.set_transform(transform + bx.transData)
+
 ax.scatter(sun_x, sun_y,
            s=2000, color='yellow', marker='.', linewidths=0,
            zorder=2)
 
 
-# sun_light = plt.Circle((sun_x, sun_y), 0.8, color='blue', fill=True)
-# ax.add_patch(sun_light)
-
-# xs = []
-# ys = []
-# for i in constelations.constelations['Pic']:
-#     xs.append(stars.iloc[i]['x'])
-#     ys.append(stars.iloc[i]['y'])
-# for i in range(len(xs)):
-#     ax.plot([xs[i], xs[i]+1], [ys[i], ys[i]+1], 'bo')
-#
-# horizon = Circle((0, 0), radius=1, transform=ax.transData)
-# for col in ax.collections:
-#     col.set_clip_path(horizon)
+file = "sun_light.png"
+sun_light = mpimg.imread(file)
+imagebox = OffsetImage(sun_light, zoom = 0.15)
+ab = AnnotationBbox(imagebox, (5, 700), frameon = False)
+ax.add_artist(ab)
 
 
-# other settings
+horizon = Circle((0, 0), radius=1, transform=ax.transData)
+for col in ax.collections:
+    col.set_clip_path(horizon)
+
 ax.set_xlim(-1, 1)
 ax.set_ylim(-1, 1)
 plt.axis('off')
-
 plt.show()
+
