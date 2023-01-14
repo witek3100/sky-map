@@ -119,8 +119,7 @@ def update_annot(ind):
 
     pos = sun.get_offsets()[ind["ind"][0]]
     annot.xy = pos
-    text = "{}, {}".format(" ".join(list(map(str,ind["ind"]))),
-                           " ".join(['g' for n in ind["ind"]]))
+    text = "sun"
     annot.set_text(text)
     annot.get_bbox_patch().set_alpha(0.4)
 
