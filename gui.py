@@ -1,5 +1,40 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+import sys
+import matplotlib
+matplotlib.use('Qt5Agg')
+from PyQt5 import QtCore, QtWidgets
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
+from matplotlib.figure import Figure
 
+import json
+import os
+import datetime as datetime
+import numpy as np
+import pytz
+from matplotlib.colors import LinearSegmentedColormap
+import skyfield.api
+from geopy import Nominatim
+from matplotlib.patches import Circle
+from tzwhere import tzwhere
+import matplotlib.image as mpimg
+import matplotlib as mpl
+from pytz import timezone, utc
+import matplotlib.pyplot as plt
+from matplotlib import *
+from skyfield.api import Star, load, wgs84, load_constellation_map, position_of_radec, load_constellation_names
+from skyfield.data import hipparcos, stellarium
+from skyfield.projections import build_stereographic_projection
+import location
+from PIL import Image
+from matplotlib.offsetbox import (OffsetImage, AnnotationBbox)
+import constelations
+import pandas
+
+class MplCanvas(FigureCanvasQTAgg):
+
+    def __init__(self, parent=None, width=5, height=4, dpi=100):
+        fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = fig.add_subplot(111)
+        super(MplCanvas, self).__init__(fig)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):

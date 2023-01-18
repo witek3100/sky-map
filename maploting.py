@@ -23,7 +23,6 @@ import constelations
 import pandas
 
 eph = load('de421.bsp')
-
 with load.open(hipparcos.URL) as f:
     stars = hipparcos.load_dataframe(f)
 
@@ -33,11 +32,8 @@ with open(os.path.relpath("loc.json")) as loc_file:
     lat = loc["results"][1]['geometry']['location']['lat']
     lon = loc["results"][1]['geometry']['location']['lng']
 
-# utc_dt = datetime.datetime.now(tz=pytz.UTC)
-# t = load.timescale().utc(utc_dt)
-
-ts = load.timescale()
-t = ts.tt(2000, 1, 1, 12, 0)
+utc_dt = datetime.datetime.now(tz=pytz.UTC)
+t = load.timescale().utc(utc_dt)
 
 observer = wgs84.latlon(latitude_degrees=lat, longitude_degrees=lon).at(t)
 position = observer.from_altaz(alt_degrees=90, az_degrees=0)
@@ -115,29 +111,29 @@ annot = ax.annotate("", xy=(0,0), xytext=(20,20),textcoords="offset points",
                     bbox=dict(boxstyle="round", fc="w"),
                     arrowprops=dict(arrowstyle="->"))
 annot.set_visible(False)
-def update_annot(ind):
-
-    pos = sun.get_offsets()[ind["ind"][0]]
-    annot.xy = pos
-    text = "sun"
-    annot.set_text(text)
-    annot.get_bbox_patch().set_alpha(0.4)
-
-
-def hover(event):
-    vis = annot.get_visible()
-    if event.inaxes == ax:
-        cont, ind = sun.contains(event)
-        if cont:
-            update_annot(ind)
-            annot.set_visible(True)
-            fig.canvas.draw_idle()
-        else:
-            if vis:
-                annot.set_visible(False)
-                fig.canvas.draw_idle()
-
-fig.canvas.mpl_connect("motion_notify_event", hover)
+# def update_annot(ind):
+#
+#     pos = sun.get_offsets()[ind["ind"][0]]
+#     annot.xy = pos
+#     text = "sun"
+#     annot.set_text(text)
+#     annot.get_bbox_patch().set_alpha(0.4)
+#
+#
+# def hover(event):
+#     vis = annot.get_visible()
+#     if event.inaxes == ax:
+#         cont, ind = sun.contains(event)
+#         if cont:
+#             update_annot(ind)
+#             annot.set_visible(True)
+#             fig.canvas.draw_idle()
+#         else:
+#             if vis:
+#                 annot.set_visible(False)
+#                 fig.canvas.draw_idle()
+#
+# fig.canvas.mpl_connect("motion_notify_event", hover)
 
 ax.set_xlim(-1, 1)
 ax.set_ylim(-1, 1)
