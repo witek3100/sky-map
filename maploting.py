@@ -68,8 +68,11 @@ stars['x'], stars['y'] = projection(star_positions)
 max_star_size = 50
 limiting_magnitude = 10
 
+
 bright_stars = (stars.magnitude <= limiting_magnitude)
 magnitude = stars['magnitude'][bright_stars]
+
+print(stars)
 
 marker_size = max_star_size * 10 ** (magnitude / -2.5)
 
