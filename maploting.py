@@ -138,6 +138,7 @@ annot.set_visible(False)
 #
 # fig.canvas.mpl_connect("motion_notify_event", hover)
 
+
 ax.set_xlim(-1, 1)
 ax.set_ylim(-1, 1)
 plt.axis('off')
