@@ -2,7 +2,7 @@ import sys
 import matplotlib
 matplotlib.use('Qt5Agg')
 from PyQt5 import QtCore, QtWidgets
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
 import json
@@ -29,87 +29,73 @@ from matplotlib.offsetbox import (OffsetImage, AnnotationBbox)
 import constelations
 import pandas
 
-class MplCanvas(FigureCanvasQTAgg):
 
-    def __init__(self, parent=None, width=5, height=4, dpi=100):
-        fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = fig.add_subplot(111)
-        super(MplCanvas, self).__init__(fig)
+class MapCanvas(FigureCanvas):
+    def __init__(self, parent):
+        fig, self.ax = plt.subplots(figsize=(5,4), dpi=200)
+        super().__init__(fig)
+        self.setParent(parent)
 
-class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1015, 696)
-        MainWindow.setStyleSheet("background:rgb(25, 25, 25)")
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.centralwidget.setObjectName("centralwidget")
-        self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(-30, -20, 1061, 211))
-        self.label.setStyleSheet("background:rgb(0, 0, 85,100)")
-        self.label.setText("")
-        self.label.setObjectName("label")
-        self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(260, 80, 121, 41))
-        self.label_2.setStyleSheet("color: rgb(255, 255, 255);\n"
-"font: 15pt \"Yu Gothic UI Semilight\";")
-        self.label_2.setObjectName("label_2")
-        self.label_3 = QtWidgets.QLabel(self.centralwidget)
-        self.label_3.setGeometry(QtCore.QRect(380, 10, 291, 61))
-        self.label_3.setStyleSheet("color:rgb(255, 255, 255);\n"
-"font: 25 22pt \"Segoe UI Light\";")
-        self.label_3.setObjectName("label_3")
-        self.label_4 = QtWidgets.QLabel(self.centralwidget)
-        self.label_4.setGeometry(QtCore.QRect(650, 80, 121, 41))
-        self.label_4.setStyleSheet("color: rgb(255, 255, 255);\n"
-"font: 15pt \"Yu Gothic UI Semilight\";")
-        self.label_4.setObjectName("label_4")
-        self.doubleSpinBox = QtWidgets.QDoubleSpinBox(self.centralwidget)
-        self.doubleSpinBox.setGeometry(QtCore.QRect(590, 130, 81, 41))
-        self.doubleSpinBox.setStyleSheet("background-color: rgb(132, 132, 132);")
-        self.doubleSpinBox.setObjectName("doubleSpinBox")
-        self.dateEdit = QtWidgets.QDateEdit(self.centralwidget)
-        self.dateEdit.setGeometry(QtCore.QRect(170, 130, 151, 41))
-        self.dateEdit.setStyleSheet("background-color: rgb(132, 132, 132);")
-        self.dateEdit.setObjectName("dateEdit")
-        self.timeEdit = QtWidgets.QTimeEdit(self.centralwidget)
-        self.timeEdit.setGeometry(QtCore.QRect(340, 130, 81, 41))
-        self.timeEdit.setStyleSheet("background-color: rgb(132, 132, 132);")
-        self.timeEdit.setObjectName("timeEdit")
-        self.doubleSpinBox_2 = QtWidgets.QDoubleSpinBox(self.centralwidget)
-        self.doubleSpinBox_2.setGeometry(QtCore.QRect(730, 130, 81, 41))
-        self.doubleSpinBox_2.setStyleSheet("background-color: rgb(132, 132, 132);")
-        self.doubleSpinBox_2.setObjectName("doubleSpinBox_2")
-        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(860, 130, 91, 41))
-        self.pushButton.setStyleSheet("background-color: rgb(132, 132, 132);")
-        self.pushButton.setObjectName("pushButton")
-        self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_2.setGeometry(QtCore.QRect(50, 130, 91, 41))
-        self.pushButton_2.setStyleSheet("background-color: rgb(132, 132, 132);")
-        self.pushButton_2.setObjectName("pushButton_2")
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
+        self.location = location.LocationApi.get_location()
+        with open(os.path.relpath("loc.json")) as loc_file:
+            observer_loc = json.load(loc_file)
+            olat = observer_loc["results"][1]['geometry']['location']['lat']
+            olon = observer_loc["results"][1]['geometry']['location']['lng']
 
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        utc_dt = datetime.datetime.now(tz=pytz.UTC)
+        self.time = load.timescale().utc(utc_dt)
 
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.label_2.setText(_translate("MainWindow", "select date"))
-        self.label_3.setText(_translate("MainWindow", "S K Y M A P"))
-        self.label_4.setText(_translate("MainWindow", "set location"))
-        self.pushButton.setText(_translate("MainWindow", "show map"))
-        self.pushButton_2.setText(_translate("MainWindow", "settings"))
+        self.observer = wgs84.latlon(latitude_degrees=olat, longitude_degrees=olon).at(self.time)
+        self.position = self.observer.from_altaz(alt_degrees=90, az_degrees=0)
 
+        ra, dec, distance = self.observer.radec()
+        center_object = Star(ra=ra, dec=dec)
 
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
+        eph = load('de421.bsp')
+        with load.open(hipparcos.URL) as f:
+            stars = hipparcos.load_dataframe(f)
+
+        earth = eph['earth']
+        center = earth.at(self.time).observe(center_object)
+        projection = build_stereographic_projection(center)
+        field_of_view_degrees = 180.0
+
+        star_positions = earth.at(self.time).observe(Star.from_dataframe(stars))
+        stars['x'], stars['y'] = projection(star_positions)
+        chart_size = 10
+
+        max_star_size = 50
+        limiting_magnitude = 10
+
+        bright_stars = (stars.magnitude <= limiting_magnitude)
+        magnitude = stars['magnitude'][bright_stars]
+
+        marker_size = max_star_size * 10 ** (magnitude / -2.5)
+
+        scatter = self.ax.scatter(stars['x'][bright_stars], stars['y'][bright_stars],
+                             s=marker_size, color='white', marker='.', linewidths=0,
+                             zorder=2)
+
+        border = plt.Circle((0, 0), 1, color='black', fill=True)
+        self.ax.add_patch(border)
+
+        horizon = Circle((0, 0), radius=1, transform=self.ax.transData)
+        for col in self.ax.collections:
+            col.set_clip_path(horizon)
+
+        self.ax.set_xlim(-1, 1)
+        self.ax.set_ylim(-1, 1)
+        plt.axis('off')
+        plt.show()
+
+class MainWindow(QtWidgets.QMainWindow):
+    def __init__(self):
+        super(MainWindow, self).__init__()
+        self.resize(1600, 800)
+
+        chart = MapCanvas(self)
+
+app = QtWidgets.QApplication(sys.argv)
+gui = MainWindow()
+gui.show()
+sys.exit(app.exec_())
