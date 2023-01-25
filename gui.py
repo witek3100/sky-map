@@ -35,8 +35,12 @@ class MainWindow(QtWidgets.QMainWindow):
         super(MainWindow, self).__init__()
         self.resize(1600, 800)
 
-        self.chart = MapCanvas(self)
-        self.chart.resize(700, 700)
+        self.map_widget = QtWidgets.QLabel(self)
+        self.map_widget.setGeometry(QtCore.QRect(400, 100, 600, 600))
+        self.map_widget.setText("")
+        self.map_widget.setObjectName("mapwidget")
+        self.chart = MapCanvas(self.map_widget)
+        self.chart.resize(600, 600)
 
 
 app = QtWidgets.QApplication(sys.argv)
