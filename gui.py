@@ -35,8 +35,16 @@ class MainWindow(QtWidgets.QMainWindow):
         super(MainWindow, self).__init__()
         self.resize(1600, 800)
 
+        self.background = QtWidgets.QLabel(self)
+        self.background.setGeometry(QtCore.QRect(0,0,2000,1000))
+        self.background.setText("")
+        self.background.setObjectName("background")
+        self.background.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(0, 11, 55, 255)"
+                                      ", stop:1 rgba(10, 2, 25, 255));\n""border-color: rgb(3, 10, 9z);\n""}")
+
         self.map_widget = QtWidgets.QLabel(self)
-        self.map_widget.setGeometry(QtCore.QRect(400, 100, 600, 600))
+        self.map_widget.setGeometry(QtCore.QRect(500, 100, 600, 600))
+        self.map_widget.setStyleSheet("background-color:rgba(30, 100, 190, 0);\n")
         self.map_widget.setText("")
         self.map_widget.setObjectName("mapwidget")
         self.chart = MapCanvas(self.map_widget)
