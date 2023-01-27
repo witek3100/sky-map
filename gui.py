@@ -33,7 +33,7 @@ from skymap import MapCanvas
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
-        self.resize(1600, 800)
+        self.resize(1090, 680)
 
         self.background = QtWidgets.QLabel(self)
         self.background.setGeometry(QtCore.QRect(0,0,2000,1000))
@@ -81,14 +81,46 @@ class MainWindow(QtWidgets.QMainWindow):
             "background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:1, y2:1, stop:0 rgba(0, 0, 0, 255)"
             ", stop:1 rgba(0, 0, 25, 255));\n""border-color: rgb(0, 0, 0z);\n""}")
 
+        self.upperbar = QtWidgets.QLabel(self)
+        self.upperbar.setGeometry(QtCore.QRect(0, 0, 1600, 120))
+        self.upperbar.setText("")
+        self.upperbar.setObjectName("upperbar")
+        self.upperbar.setStyleSheet("background-color:rgb(20,20,80,150);")
+
         self.search_bar = QtWidgets.QLineEdit(self, placeholderText=" search city ... ")
-        self.search_bar.setGeometry(QtCore.QRect(800, 10, 500, 90))
-        completer = QtWidgets.QCompleter(['Nowy Jork', 'Sydney', 'Johanesburg', 'Rio de Janiero'])
+        self.search_bar.setGeometry(QtCore.QRect(120, 470, 200, 45))
+        completer = QtWidgets.QCompleter(['Now York', 'Sydney', 'Johanesburg', 'Rio de Janiero'])
         self.search_bar.setCompleter(completer)
         self.search_bar.setStyleSheet("background-color:rgb(0,0,25,150);"
                                       "font: 20pt \"Calibri\";\n"
                                       "color:rgb(255, 255, 255);")
         self.search_bar.setObjectName("lineEdit")
+
+        self.show_button = QtWidgets.QPushButton(self, clicked= lambda : self.show_map())
+        self.show_button.setGeometry(QtCore.QRect(150, 550, 150, 50))
+        self.show_button.setStyleSheet("background-color:rgb(50,50,50);")
+        self.show_button.setObjectName("showbutton")
+        self.show_button.setText("Show")
+
+        self.skymap = QtWidgets.QLabel(self)
+        self.skymap.setGeometry(QtCore.QRect(450, 20, 300, 40))
+        self.skymap.setStyleSheet("background-color:rgb(0,0,0,0);"
+                                  "font: 30pt \"Calibri\";\n"
+                                  "color:rgb(255, 255, 255);")
+        self.skymap.setObjectName("skymap")
+        self.skymap.setText("SKYMAP")
+
+        self.citydate = QtWidgets.QLabel(self)
+        self.citydate.setGeometry(QtCore.QRect(360, 70, 600, 40))
+        self.citydate.setStyleSheet("background-color:rgb(0,0,0,0);"
+                                  "font: 20pt \"Calibri\";\n"
+                                  "color:rgb(255, 255, 255);")
+        self.citydate.setObjectName("citydate")
+        self.citydate.setText("Krakow - 27.01.2023 12:00")
+
+    def show_map(self):
+        pass
+
 
 
 app = QtWidgets.QApplication(sys.argv)
