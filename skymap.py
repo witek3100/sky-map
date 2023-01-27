@@ -57,7 +57,9 @@ class MapCanvas(FigureCanvas):
                              s=marker_size, color='white', marker='.', linewidths=0,
                              zorder=2)
 
-        border = plt.Circle((0, 0), 1, color='black', fill=True)
+        bckg = plt.Circle((0, 0), 4, color='black', fill=True)
+        self.ax.add_patch(bckg)
+        border = plt.Circle((0, 0), 1, color='grey', fill=False)
         self.ax.add_patch(border)
 
         horizon = Circle((0, 0), radius=1, transform=self.ax.transData)
