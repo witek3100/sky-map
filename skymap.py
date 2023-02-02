@@ -12,21 +12,15 @@ import location
 
 
 class MapCanvas(FigureCanvas):
-    def __init__(self, parent):
+    def __init__(self, parent, lat, lon):
         fig, self.ax = plt.subplots(figsize=(5,4), dpi=200)
         super().__init__(fig)
         self.setParent(parent)
 
-        self.location = location.LocationApi.get_location()
-        with open(os.path.relpath("loc.json")) as loc_file:
-            observer_loc = json.load(loc_file)
-            olat = observer_loc["results"][1]['geometry']['location']['lat']
-            olon = observer_loc["results"][1]['geometry']['location']['lng']
-
         utc_dt = datetime.datetime.now(tz=pytz.UTC)
         self.time = load.timescale().utc(utc_dt)
 
-        self.observer = wgs84.latlon(latitude_degrees=olat, longitude_degrees=olon).at(self.time)
+        self.observer = wgs84.latlon(latitude_degrees=lat, longitude_degrees=lon).at(self.time)
         self.position = self.observer.from_altaz(alt_degrees=90, az_degrees=0)
 
         ra, dec, distance = self.observer.radec()

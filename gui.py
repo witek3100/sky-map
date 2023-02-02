@@ -32,6 +32,13 @@ from skymap import MapCanvas
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
+
+        self.location = location.LocationApi.get_location()
+        with open(os.path.relpath("loc.json")) as loc_file:
+            observer_loc = json.load(loc_file)
+            self.lat = observer_loc["results"][1]['geometry']['location']['lat']
+            self.lon = observer_loc["results"][1]['geometry']['location']['lng']
+
         super(MainWindow, self).__init__()
         self.resize(1090, 680)
 
@@ -47,7 +54,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.map_widget.setStyleSheet("background-color:rgba(30, 100, 190, 255);\n")
         self.map_widget.setText("")
         self.map_widget.setObjectName("mapwidget")
-        self.chart = MapCanvas(self.map_widget)
+        self.chart = MapCanvas(self.map_widget, self.lat, self.lon)
         self.chart.resize(600, 600)
 
         self.ub = QtWidgets.QLabel(self)
@@ -62,7 +69,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.bb.setText("")
         self.bb.setObjectName("lb")
         self.bb.setStyleSheet(
-            "background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:1, y2:1, stop:0 rgba(0, 0, 25, 255)"
+            "background-color: qlineargradient(spread:pad, x1:1, y1:1, x2:1, y2:1, stop:0 rgba(0, 0, 0, 255)"
+            ""
             ", stop:1 rgba(0, 0, 0, 255));\n""border-color: rgb(0, 0, 0z);\n""}")
 
         self.lb = QtWidgets.QLabel(self)
@@ -87,18 +95,47 @@ class MainWindow(QtWidgets.QMainWindow):
         self.upperbar.setObjectName("upperbar")
         self.upperbar.setStyleSheet("background-color:rgb(20,20,80,150);")
 
+        self.locationlabel = QtWidgets.QLabel(self)
+        self.locationlabel.setGeometry(QtCore.QRect(70, 170, 300, 40))
+        self.locationlabel.setText("LOCATION")
+        self.locationlabel.setStyleSheet("background-color:rgb(0,0,0,0);"
+                                  "font: 16pt \"Calibri\";\n"
+                                  "color:rgb(255, 255, 255);")
+
         self.search_bar = QtWidgets.QLineEdit(self, placeholderText=" search city ... ")
-        self.search_bar.setGeometry(QtCore.QRect(120, 470, 200, 45))
+        self.search_bar.setGeometry(QtCore.QRect(120, 220, 220, 45))
         completer = QtWidgets.QCompleter(['Now York', 'Sydney', 'Johanesburg', 'Rio de Janiero'])
         self.search_bar.setCompleter(completer)
-        self.search_bar.setStyleSheet("background-color:rgb(0,0,25,150);"
+        self.search_bar.setStyleSheet("background-color:rgb(20,20,60,150);"
                                       "font: 20pt \"Calibri\";\n"
-                                      "color:rgb(255, 255, 255);")
+                                      "color:rgb(255, 255, 255);"
+                                      "border : 1px solid black;"
+                                      "border-radius : 50px;")
         self.search_bar.setObjectName("lineEdit")
 
+        self.get_location_button = QtWidgets.QPushButton(self)
+        self.get_location_button.setGeometry(QtCore.QRect(160, 290, 120, 40))
+        self.get_location_button.setStyleSheet("background-color:rgb(50,50,50);"
+                                               "color:rgb(255,255,255);")
+        self.get_location_button.setObjectName("showbutton")
+        self.get_location_button.setText("Get your location")
+
+        self.datelabel = QtWidgets.QLabel(self)
+        self.datelabel.setGeometry(QtCore.QRect(70, 330, 300, 40))
+        self.datelabel.setText("DATE")
+        self.datelabel.setStyleSheet("background-color:rgb(0,0,0,0);"
+                                         "font: 16pt \"Calibri\";\n"
+                                         "color:rgb(255, 255, 255);")
+
+        self.datehourin = QtWidgets.QDateTimeEdit(self)
+        self.datehourin.setGeometry(QtCore.QRect(100, 380, 250, 50))
+        self.datehourin.setStyleSheet("background-color:rgb(50,50,50);"
+                                  "color:rgb(255,255,255);")
+
         self.show_button = QtWidgets.QPushButton(self, clicked= lambda : self.show_map())
-        self.show_button.setGeometry(QtCore.QRect(150, 550, 150, 50))
-        self.show_button.setStyleSheet("background-color:rgb(50,50,50);")
+        self.show_button.setGeometry(QtCore.QRect(150, 500, 150, 50))
+        self.show_button.setStyleSheet("background-color:rgb(50,50,50);"
+                                       "color:rgb(255,255,255);")
         self.show_button.setObjectName("showbutton")
         self.show_button.setText("Show")
 
@@ -111,12 +148,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.skymap.setText("SKYMAP")
 
         self.citydate = QtWidgets.QLabel(self)
-        self.citydate.setGeometry(QtCore.QRect(360, 70, 600, 40))
+        self.citydate.setGeometry(QtCore.QRect(360, 70, 900, 40))
         self.citydate.setStyleSheet("background-color:rgb(0,0,0,0);"
                                   "font: 20pt \"Calibri\";\n"
                                   "color:rgb(255, 255, 255);")
         self.citydate.setObjectName("citydate")
-        self.citydate.setText("Krakow - 27.01.2023 12:00")
+        self.citydate.setText("{}N {}E ".format(round(self.lat,3), round(self.lon,3)))
 
     def show_map(self):
         pass
