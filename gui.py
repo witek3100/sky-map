@@ -38,6 +38,8 @@ class MainWindow(QtWidgets.QMainWindow):
             observer_loc = json.load(loc_file)
             self.lat = observer_loc["results"][1]['geometry']['location']['lat']
             self.lon = observer_loc["results"][1]['geometry']['location']['lng']
+        utc_dt = datetime.datetime.now(tz=pytz.UTC)
+        self.time = load.timescale().utc(utc_dt)
 
         super(MainWindow, self).__init__()
         self.resize(1090, 680)
@@ -54,7 +56,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.map_widget.setStyleSheet("background-color:rgba(30, 100, 190, 255);\n")
         self.map_widget.setText("")
         self.map_widget.setObjectName("mapwidget")
-        self.chart = MapCanvas(self.map_widget, self.lat, self.lon)
+        self.chart = MapCanvas(self.map_widget, self.lat, self.lon, self.time)
         self.chart.resize(600, 600)
 
         self.ub = QtWidgets.QLabel(self)
@@ -148,12 +150,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.skymap.setText("SKYMAP")
 
         self.citydate = QtWidgets.QLabel(self)
-        self.citydate.setGeometry(QtCore.QRect(360, 70, 900, 40))
+        self.citydate.setGeometry(QtCore.QRect(330, 70, 900, 40))
         self.citydate.setStyleSheet("background-color:rgb(0,0,0,0);"
                                   "font: 20pt \"Calibri\";\n"
                                   "color:rgb(255, 255, 255);")
         self.citydate.setObjectName("citydate")
-        self.citydate.setText("{}N {}E ".format(round(self.lat,3), round(self.lon,3)))
+        f = lambda x: "0{}".format(x) if x < 10 else x
+        self.citydate.setText("{}N {}E - {}.{}.{}  {}:{}".format(round(self.lat,3), round(self.lon,3),
+                                                                 f(self.time.utc[2]), f(self.time.utc[1]),
+                                                                 self.time.utc[0], self.time.utc[3], self.time.utc[4]))
 
     def show_map(self):
         pass

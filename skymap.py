@@ -12,15 +12,12 @@ import location
 
 
 class MapCanvas(FigureCanvas):
-    def __init__(self, parent, lat, lon):
+    def __init__(self, parent, lat, lon, time):
         fig, self.ax = plt.subplots(figsize=(5,4), dpi=200)
         super().__init__(fig)
         self.setParent(parent)
 
-        utc_dt = datetime.datetime.now(tz=pytz.UTC)
-        self.time = load.timescale().utc(utc_dt)
-
-        self.observer = wgs84.latlon(latitude_degrees=lat, longitude_degrees=lon).at(self.time)
+        self.observer = wgs84.latlon(latitude_degrees=lat, longitude_degrees=lon).at(time)
         self.position = self.observer.from_altaz(alt_degrees=90, az_degrees=0)
 
         ra, dec, distance = self.observer.radec()
@@ -31,11 +28,11 @@ class MapCanvas(FigureCanvas):
             stars = hipparcos.load_dataframe(f)
 
         earth = eph['earth']
-        center = earth.at(self.time).observe(center_object)
+        center = earth.at(time).observe(center_object)
         projection = build_stereographic_projection(center)
         field_of_view_degrees = 180.0
 
-        star_positions = earth.at(self.time).observe(Star.from_dataframe(stars))
+        star_positions = earth.at(time).observe(Star.from_dataframe(stars))
         stars['x'], stars['y'] = projection(star_positions)
         chart_size = 10
 
