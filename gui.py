@@ -4,6 +4,7 @@ matplotlib.use('Qt5Agg')
 from PyQt5 import QtCore, QtWidgets
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
+import re
 
 import json
 import os
@@ -33,6 +34,35 @@ from skymap import MapCanvas
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
 
+
+        super(MainWindow, self).__init__()
+        self.resize(1090, 680)
+
+        self.cities = {'Baku' : [40.29, 49.56],
+                       'Warsaw' : [52.13, 21],
+                       'Buenos Aires' : [-36.3, -60],
+                       'Canberra' : [-35.15, 149.08],
+                       'Brasilia' : [-15.47, -47.55],
+                       'Beijing' : [39.55, 116.2],
+                       'Addis Ababa' : [9.02, 38.42],
+                       'Tromso' : [69.65, 18.96],
+                       'Reykiavik' : [60.15, -21.90],
+                       'Nuuk' : [64.18, -51.75],
+                       'New York' : [40.73, -73.94],
+                       'Seattle' : [47.6, -122.36],
+                       'Los Angeles' : [34.05, -118.24],
+                       'Houston' : [29.75, -95.35],
+                       'Mexico City' : [19.43, -99.13],
+                       'Bogota' : [4.62, -74.06],
+                       'Barcelona' : [41.39, 2.15],
+                       'Lisbon' : [38.74, -9.14],
+                       'Berlin' : [52.52, 13.4],
+                       'Kair' : [30, 31],
+                       'Accra' : [5.35, 0],
+                       'New Delhi' : [28.37, 77.13],
+                       'Manila' : [14.4, 121.03],
+                       'Tokio' : [35.65, 139.83]}
+
         self.location = location.LocationApi.get_location()
         with open(os.path.relpath("loc.json")) as loc_file:
             observer_loc = json.load(loc_file)
@@ -40,9 +70,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.lon = observer_loc["results"][1]['geometry']['location']['lng']
         utc_dt = datetime.datetime.now(tz=pytz.UTC)
         self.time = load.timescale().utc(utc_dt)
-
-        super(MainWindow, self).__init__()
-        self.resize(1090, 680)
 
         self.background = QtWidgets.QLabel(self)
         self.background.setGeometry(QtCore.QRect(0,0,2000,1000))
@@ -106,7 +133,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.search_bar = QtWidgets.QLineEdit(self, placeholderText=" search city ... ")
         self.search_bar.setGeometry(QtCore.QRect(120, 220, 220, 45))
-        completer = QtWidgets.QCompleter(['Now York', 'Sydney', 'Johanesburg', 'Rio de Janiero'])
+        completer = QtWidgets.QCompleter(self.cities)
         self.search_bar.setCompleter(completer)
         self.search_bar.setStyleSheet("background-color:rgb(20,20,60,150);"
                                       "font: 20pt \"Calibri\";\n"
@@ -115,7 +142,7 @@ class MainWindow(QtWidgets.QMainWindow):
                                       "border-radius : 50px;")
         self.search_bar.setObjectName("lineEdit")
 
-        self.get_location_button = QtWidgets.QPushButton(self)
+        self.get_location_button = QtWidgets.QPushButton(self, clicked= lambda : self.getLocation())
         self.get_location_button.setGeometry(QtCore.QRect(160, 290, 120, 40))
         self.get_location_button.setStyleSheet("background-color:rgb(50,50,50);"
                                                "color:rgb(255,255,255);")
@@ -133,14 +160,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.datehourin.setGeometry(QtCore.QRect(100, 380, 250, 50))
         self.datehourin.setStyleSheet("background-color:rgb(50,50,50);"
                                   "color:rgb(255,255,255);")
+        self.datehourin.setDateTime(QtCore.QDateTime.currentDateTime())
 
-        self.setcurrenttimebutton = QtWidgets.QPushButton(self)
+        self.setcurrenttimebutton = QtWidgets.QPushButton(self, clicked= lambda : self.datehourin.setDateTime(QtCore.QDateTime.currentDateTime()))
         self.setcurrenttimebutton.setGeometry(160, 440, 120, 40)
         self.setcurrenttimebutton.setStyleSheet("background-color:rgb(50,50,50);"
                                       "color:rgb(255,255,255);")
         self.setcurrenttimebutton.setText("set current")
 
-        self.show_button = QtWidgets.QPushButton(self, clicked= lambda : self.show_map())
+        self.show_button = QtWidgets.QPushButton(self, clicked= lambda : self.showMap())
         self.show_button.setGeometry(QtCore.QRect(145, 540, 150, 50))
         self.show_button.setStyleSheet("background-color:rgb(50,50,50);"
                                        "color:rgb(255,255,255);")
@@ -156,20 +184,45 @@ class MainWindow(QtWidgets.QMainWindow):
         self.skymap.setText("SKYMAP")
 
         self.citydate = QtWidgets.QLabel(self)
-        self.citydate.setGeometry(QtCore.QRect(330, 70, 900, 40))
+        self.citydate.setGeometry(QtCore.QRect(110, 70, 900, 40))
         self.citydate.setStyleSheet("background-color:rgb(0,0,0,0);"
                                   "font: 20pt \"Calibri\";\n"
                                   "color:rgb(255, 255, 255);"
                                     "border-radius: 10px;")
         self.citydate.setObjectName("citydate")
+        self.citydate.setAlignment(QtCore.Qt.AlignCenter)
+        self.setCitydateText()
+
+    def setCitydateText(self):
         f = lambda x: "0{}".format(x) if x < 10 else x
-        self.citydate.setText("{}N {}E - {}.{}.{}  {}:{}".format(round(self.lat,3), round(self.lon,3),
+        self.citydate.setText("{} {} - {}.{}.{}  {}:{}".format(round(self.lat,3), round(self.lon,3),
                                                                  f(self.time.utc[2]), f(self.time.utc[1]),
                                                                  self.time.utc[0], f(self.time.utc[3]), f(self.time.utc[4])))
 
-    def show_map(self):
-        pass
+    def getLocation(self):
+        self.location = location.LocationApi.get_location()
+        with open(os.path.relpath("loc.json")) as loc_file:
+            observer_loc = json.load(loc_file)
+            self.lat = observer_loc["results"][1]['geometry']['location']['lat']
+            self.lon = observer_loc["results"][1]['geometry']['location']['lng']
+        self.search_bar.setText("{} {}".format(round(self.lat, 3), round(self.lon, 3)))
 
+    def showMap(self):
+        loc = self.search_bar.text()
+        if loc in self.cities:
+            self.lat, self.lon = self.cities[loc]
+        elif not re.search("^[0-9]{2}", loc):
+            print('unable to find this location')
+            return
+        f = lambda x: "0{}".format(x) if x < 10 else x
+        ts = load.timescale()
+
+        self.citydate.setText("{} - {}.{}.{}  {}:{}".format(loc, f(self.time.utc[2]), f(self.time.utc[1]),
+                                                            self.time.utc[0], f(self.time.utc[3]),
+                                                            f(self.time.utc[4])))
+        self.time = ts.utc(self.datehourin.date().year(), self.datehourin.date().month(), self.datehourin.date().day(),
+                                  self.datehourin.time().hour(), self.datehourin.time().minute())
+        self.chart = MapCanvas(self.map_widget, self.lat, self.lon, self.time)
 
 
 app = QtWidgets.QApplication(sys.argv)
