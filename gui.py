@@ -134,8 +134,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.datehourin.setStyleSheet("background-color:rgb(50,50,50);"
                                   "color:rgb(255,255,255);")
 
+        self.setcurrenttimebutton = QtWidgets.QPushButton(self)
+        self.setcurrenttimebutton.setGeometry(160, 440, 120, 40)
+        self.setcurrenttimebutton.setStyleSheet("background-color:rgb(50,50,50);"
+                                      "color:rgb(255,255,255);")
+        self.setcurrenttimebutton.setText("set current")
+
         self.show_button = QtWidgets.QPushButton(self, clicked= lambda : self.show_map())
-        self.show_button.setGeometry(QtCore.QRect(150, 500, 150, 50))
+        self.show_button.setGeometry(QtCore.QRect(145, 540, 150, 50))
         self.show_button.setStyleSheet("background-color:rgb(50,50,50);"
                                        "color:rgb(255,255,255);")
         self.show_button.setObjectName("showbutton")
@@ -153,12 +159,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.citydate.setGeometry(QtCore.QRect(330, 70, 900, 40))
         self.citydate.setStyleSheet("background-color:rgb(0,0,0,0);"
                                   "font: 20pt \"Calibri\";\n"
-                                  "color:rgb(255, 255, 255);")
+                                  "color:rgb(255, 255, 255);"
+                                    "border-radius: 10px;")
         self.citydate.setObjectName("citydate")
         f = lambda x: "0{}".format(x) if x < 10 else x
         self.citydate.setText("{}N {}E - {}.{}.{}  {}:{}".format(round(self.lat,3), round(self.lon,3),
                                                                  f(self.time.utc[2]), f(self.time.utc[1]),
-                                                                 self.time.utc[0], self.time.utc[3], self.time.utc[4]))
+                                                                 self.time.utc[0], f(self.time.utc[3]), f(self.time.utc[4])))
 
     def show_map(self):
         pass
