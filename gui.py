@@ -10,7 +10,6 @@ from skymap import MapCanvas
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
 
-
         super(MainWindow, self).__init__()
         self.resize(1090, 680)
 
