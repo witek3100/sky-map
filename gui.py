@@ -2,6 +2,8 @@ import matplotlib
 matplotlib.use('Qt5Agg')
 from PyQt5 import QtCore, QtWidgets
 import json
+import datetime as datetime
+import pytz
 from matplotlib import *
 from skyfield.api import Star, load, wgs84, load_constellation_map, position_of_radec, load_constellation_names
 import location
@@ -9,6 +11,7 @@ from skymap import MapCanvas
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
+
 
         super(MainWindow, self).__init__()
         self.resize(1090, 680)
