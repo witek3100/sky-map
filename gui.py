@@ -219,7 +219,7 @@ class MainWindow(QtWidgets.QMainWindow):
         loc = self.search_bar.text()
         if loc in self.cities:
             self.lat, self.lon = self.cities[loc]
-        elif not re.search("^[0-9]{2}", loc):
+        elif not re.search("\d\d\D\d\d\d \d\d\D\d\d\d", loc):
             self.infolabel.setText("unable to find this location")
             return
         f = lambda x: "0{}".format(x) if x < 10 else x

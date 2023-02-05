@@ -119,7 +119,7 @@ class MapCanvas(FigureCanvas):
 
         bckg = plt.Circle((0, 0), 4, color='black', fill=True)
         self.ax.add_patch(bckg)
-        border = plt.Circle((0, 0), 1, color='grey', fill=False)
+        border = plt.Circle((0, 0), 0.99, color='grey', fill=False, linewidth=0.8)
         self.ax.add_patch(border)
         horizon = Circle((0, 0), radius=1, transform=self.ax.transData)
         for col in self.ax.collections:
