@@ -183,6 +183,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.skymap.setObjectName("skymap")
         self.skymap.setText("SKYMAP")
 
+        self.infolabel = QtWidgets.QLabel(self)
+        self.infolabel.setGeometry(QtCore.QRect(0, 650, 300, 30))
+        self.infolabel.setStyleSheet("background-color:rgb(0,0,0,0);"
+                                  "font: 12pt \"Calibri\";\n"
+                                  "color:rgb(255, 255, 255);")
+        self.infolabel.setText("")
+
         self.citydate = QtWidgets.QLabel(self)
         self.citydate.setGeometry(QtCore.QRect(110, 70, 900, 40))
         self.citydate.setStyleSheet("background-color:rgb(0,0,0,0);"
@@ -208,11 +215,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.search_bar.setText("{} {}".format(round(self.lat, 3), round(self.lon, 3)))
 
     def showMap(self):
+        self.infolabel.setText("")
         loc = self.search_bar.text()
         if loc in self.cities:
             self.lat, self.lon = self.cities[loc]
         elif not re.search("^[0-9]{2}", loc):
-            print('unable to find this location')
+            self.infolabel.setText("unable to find this location")
             return
         f = lambda x: "0{}".format(x) if x < 10 else x
         ts = load.timescale()
