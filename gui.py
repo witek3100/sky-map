@@ -225,6 +225,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.chart = MapCanvas(self.map_widget, self.lat, self.lon, self.time)
 
 
+
 app = QtWidgets.QApplication(sys.argv)
 gui = MainWindow()
 gui.show()
