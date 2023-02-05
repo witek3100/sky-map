@@ -225,11 +225,12 @@ class MainWindow(QtWidgets.QMainWindow):
         f = lambda x: "0{}".format(x) if x < 10 else x
         ts = load.timescale()
 
+        self.time = ts.utc(self.datehourin.date().year(), self.datehourin.date().month(), self.datehourin.date().day(),
+                           self.datehourin.time().hour(), self.datehourin.time().minute())
         self.citydate.setText("{} - {}.{}.{}  {}:{}".format(loc, f(self.time.utc[2]), f(self.time.utc[1]),
                                                             self.time.utc[0], f(self.time.utc[3]),
                                                             f(self.time.utc[4])))
-        self.time = ts.utc(self.datehourin.date().year(), self.datehourin.date().month(), self.datehourin.date().day(),
-                                  self.datehourin.time().hour(), self.datehourin.time().minute())
+
         self.chart = MapCanvas(self.map_widget, self.lat, self.lon, self.time)
 
 
