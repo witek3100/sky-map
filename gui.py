@@ -62,13 +62,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.map_widget.setObjectName("mapwidget")
         self.chart = MapCanvas(self.map_widget, self.lat, self.lon, self.time)
         self.chart.resize(600, 600)
+        self.map_widget.show()
 
         self.ub = QtWidgets.QLabel(self)
         self.ub.setGeometry(QtCore.QRect(500, 100, 610, 72))
         self.ub.setText("")
         self.ub.setObjectName("lb")
-        self.ub.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(0, 0, 25, 255)"
-                                      ", stop:1 rgba(0, 0, 0, 255));\n""border-color: rgb(3, 0, 9z);\n""}")
+        self.ub.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(0, 0, 25, 255)"
+            ", stop:1 rgba(0, 0, 0, 255));\n""border-color: rgb(3, 0, 9z);\n""}")
+        self.ub.show()
 
         self.bb = QtWidgets.QLabel(self)
         self.bb.setGeometry(QtCore.QRect(500, 633, 610, 72))
@@ -78,14 +81,16 @@ class MainWindow(QtWidgets.QMainWindow):
             "background-color: qlineargradient(spread:pad, x1:1, y1:1, x2:1, y2:1, stop:0 rgba(0, 0, 0, 255)"
             ""
             ", stop:1 rgba(0, 0, 0, 255));\n""border-color: rgb(0, 0, 0z);\n""}")
+        self.bb.show()
 
         self.lb = QtWidgets.QLabel(self)
         self.lb.setGeometry(QtCore.QRect(500, 100, 75, 600))
         self.lb.setText("")
         self.lb.setObjectName("lb")
-        self.lb.setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:1, y2:1, stop:0 rgba(0, 0, 25, 255)"
-                                      ", stop:1 rgba(0, 0, 0, 255));\n""border-color: rgb(0, 0, 0z);\n""}")
-
+        self.lb.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:1, y2:1, stop:0 rgba(0, 0, 25, 255)"
+            ", stop:1 rgba(0, 0, 0, 255));\n""border-color: rgb(0, 0, 0z);\n""}")
+        self.lb.show()
 
         self.rb = QtWidgets.QLabel(self)
         self.rb.setGeometry(QtCore.QRect(1040, 100, 72, 600))
@@ -94,12 +99,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.rb.setStyleSheet(
             "background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:1, y2:1, stop:0 rgba(0, 0, 0, 255)"
             ", stop:1 rgba(0, 0, 25, 255));\n""border-color: rgb(0, 0, 0z);\n""}")
+        self.rb.show()
 
         self.upperbar = QtWidgets.QLabel(self)
         self.upperbar.setGeometry(QtCore.QRect(0, 0, 1600, 120))
         self.upperbar.setText("")
         self.upperbar.setObjectName("upperbar")
-        self.upperbar.setStyleSheet("background-color:rgb(20,20,80,150);")
+        self.upperbar.setStyleSheet("background-color:rgb(0,20,40,255);")
 
         self.locationlabel = QtWidgets.QLabel(self)
         self.locationlabel.setGeometry(QtCore.QRect(70, 170, 300, 40))
@@ -177,6 +183,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.citydate.setAlignment(QtCore.Qt.AlignCenter)
         self.setCitydateText()
 
+
     def setCitydateText(self):
         f = lambda x: "0{}".format(x) if x < 10 else x
         self.citydate.setText("{} {} - {}.{}.{}  {}:{}".format(round(self.lat,3), round(self.lon,3),
@@ -208,8 +215,51 @@ class MainWindow(QtWidgets.QMainWindow):
                                                             self.time.utc[0], f(self.time.utc[3]),
                                                             f(self.time.utc[4])))
 
+        self.map_widget = QtWidgets.QLabel(self)
+        self.map_widget.setGeometry(QtCore.QRect(500, 100, 600, 600))
+        self.map_widget.setStyleSheet("background-color:rgba(30, 100, 190, 255);\n")
+        self.map_widget.setText("")
+        self.map_widget.setObjectName("mapwidget")
         self.chart = MapCanvas(self.map_widget, self.lat, self.lon, self.time)
+        self.chart.resize(600, 600)
+        self.map_widget.show()
 
+        self.ub = QtWidgets.QLabel(self)
+        self.ub.setGeometry(QtCore.QRect(500, 100, 610, 72))
+        self.ub.setText("")
+        self.ub.setObjectName("lb")
+        self.ub.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(0, 0, 25, 255)"
+            ", stop:1 rgba(0, 0, 0, 255));\n""border-color: rgb(3, 0, 9z);\n""}")
+        self.ub.show()
+
+        self.bb = QtWidgets.QLabel(self)
+        self.bb.setGeometry(QtCore.QRect(500, 633, 610, 72))
+        self.bb.setText("")
+        self.bb.setObjectName("lb")
+        self.bb.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:1, y1:1, x2:1, y2:1, stop:0 rgba(0, 0, 0, 255)"
+            ""
+            ", stop:1 rgba(0, 0, 0, 255));\n""border-color: rgb(0, 0, 0z);\n""}")
+        self.bb.show()
+
+        self.lb = QtWidgets.QLabel(self)
+        self.lb.setGeometry(QtCore.QRect(500, 100, 75, 600))
+        self.lb.setText("")
+        self.lb.setObjectName("lb")
+        self.lb.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:1, y2:1, stop:0 rgba(0, 0, 25, 255)"
+            ", stop:1 rgba(0, 0, 0, 255));\n""border-color: rgb(0, 0, 0z);\n""}")
+        self.lb.show()
+
+        self.rb = QtWidgets.QLabel(self)
+        self.rb.setGeometry(QtCore.QRect(1040, 100, 72, 600))
+        self.rb.setText("")
+        self.rb.setObjectName("lb")
+        self.rb.setStyleSheet(
+            "background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:1, y2:1, stop:0 rgba(0, 0, 0, 255)"
+            ", stop:1 rgba(0, 0, 25, 255));\n""border-color: rgb(0, 0, 0z);\n""}")
+        self.rb.show()
 
 
 app = QtWidgets.QApplication(sys.argv)
