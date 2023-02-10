@@ -102,7 +102,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.rb.show()
 
         self.upperbar = QtWidgets.QLabel(self)
-        self.upperbar.setGeometry(QtCore.QRect(0, 0, 1600, 120))
+        self.upperbar.setGeometry(QtCore.QRect(0, 0, 1600, 99))
         self.upperbar.setText("")
         self.upperbar.setObjectName("upperbar")
         self.upperbar.setStyleSheet("background-color:rgb(0,20,40,255);")
@@ -159,9 +159,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.show_button.setText("Show")
 
         self.skymap = QtWidgets.QLabel(self)
-        self.skymap.setGeometry(QtCore.QRect(450, 20, 300, 40))
+        self.skymap.setGeometry(QtCore.QRect(450, 15, 260, 40))
         self.skymap.setStyleSheet("background-color:rgb(0,0,0,0);"
-                                  "font: 30pt \"Calibri\";\n"
+                                  "font: 28pt \"Calibri\";\n"
                                   "color:rgb(255, 255, 255);")
         self.skymap.setObjectName("skymap")
         self.skymap.setText("SKYMAP")
@@ -174,9 +174,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.infolabel.setText("")
 
         self.citydate = QtWidgets.QLabel(self)
-        self.citydate.setGeometry(QtCore.QRect(110, 70, 900, 40))
+        self.citydate.setGeometry(QtCore.QRect(110, 60, 900, 40))
         self.citydate.setStyleSheet("background-color:rgb(0,0,0,0);"
-                                  "font: 20pt \"Calibri\";\n"
+                                  "font: 17pt \"Calibri\";\n"
                                   "color:rgb(255, 255, 255);"
                                     "border-radius: 10px;")
         self.citydate.setObjectName("citydate")
@@ -260,6 +260,12 @@ class MainWindow(QtWidgets.QMainWindow):
             "background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:1, y2:1, stop:0 rgba(0, 0, 0, 255)"
             ", stop:1 rgba(0, 0, 25, 255));\n""border-color: rgb(0, 0, 0z);\n""}")
         self.rb.show()
+
+        self.upperbar = QtWidgets.QLabel(self)
+        self.upperbar.setGeometry(QtCore.QRect(0, 0, 1600, 120))
+        self.upperbar.setText("")
+        self.upperbar.setObjectName("upperbar")
+        self.upperbar.setStyleSheet("background-color:rgb(0,20,40,255);")
 
 
 app = QtWidgets.QApplication(sys.argv)
