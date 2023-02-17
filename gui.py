@@ -38,7 +38,8 @@ class MainWindow(QtWidgets.QMainWindow):
                        'Accra' : [5.35, 0],
                        'New Delhi' : [28.37, 77.13],
                        'Manila' : [14.4, 121.03],
-                       'Tokio' : [35.65, 139.83]}
+                       'Tokio' : [35.65, 139.83],
+                       'Nowy Sacz' : [51.00, 20.00]}
 
         self.location = location.LocationApi.get_location()
         with open(os.path.relpath("loc.json")) as loc_file:
