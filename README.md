@@ -1,5 +1,7 @@
 # sky-map
-Flask web app showing night sky map for choosen location and date
+Flask web app showing night sky map for choosen location and date 
+
+Project in early version available [here](http://skymap-env.eba-pinmgrft.eu-north-1.elasticbeanstalk.com/)
 
 ##
 Some of technologies and libraries used
