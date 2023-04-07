@@ -1,26 +1,22 @@
-import base64
 from matplotlib.patches import Circle
 import matplotlib.pyplot as plt
-from skyfield.api import Star, load, wgs84, load_constellation_map, position_of_radec, load_constellation_names
+from skyfield.api import Star, load, wgs84, load_constellation_map, position_of_radec, load_constellation_names, utc
 from skyfield.data import hipparcos, stellarium
 from skyfield.projections import build_stereographic_projection
 from io import BytesIO
 from matplotlib.figure import Figure
-import pytz
-import datetime
-utc_dt = datetime.datetime.now(tz=pytz.UTC)
-time = load.timescale().utc(utc_dt)
 
-def create_map(longtitude, latitude):
-    try:
-        lon = float(longtitude)
-        lat = float(latitude)
-    except ValueError:
-        lon = 0
-        lat = 0
 
-    fig = Figure(figsize=(10,10), dpi=100)
-    fig.set_facecolor((0,0,0))
+
+
+def create_map(longtitude, latitude, utc_dt):
+
+    time = load.timescale().utc(utc_dt)
+    lon = longtitude
+    lat = latitude
+
+    fig = Figure(figsize=(10,10), dpi=100, frameon=False)
+    fig.set_facecolor((1,1,1))
     ax = fig.subplots()
     observer = wgs84.latlon(latitude_degrees=lat, longitude_degrees=lon).at(time)
     position = observer.from_altaz(alt_degrees=90, az_degrees=0)
@@ -29,7 +25,7 @@ def create_map(longtitude, latitude):
     center_object = Star(ra=ra, dec=dec)
 
     eph = load('de421.bsp')
-    with load.open(hipparcos.URL) as f:
+    with load.open('hip_main.dat') as f:
         stars = hipparcos.load_dataframe(f)
 
     earth = eph['earth']

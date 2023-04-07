@@ -6,9 +6,8 @@
     <title>SKYMAP</title>
         <style type="text/css">
         .sidenav {
-            height: 10%;
+            height: 15%;
             width: 100%;
-            position: fixed;
             z-index: 1;
             top: 0;
             left: 0;
@@ -26,6 +25,23 @@
             background-color: rgb(30, 30, 30);
             color: white;
         }
+        .main h1{
+            margin: 0;
+            position: absolute;
+            top: 40%;
+            left: 40%;
+        }
+        .main h2{
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 25%;
+        }
+        .container label{
+            color: cornsilk;
+            font-size: 30px;
+        }
+
     </style>
 </head>
 <body style="background-color: black">
@@ -37,14 +53,15 @@
             <label for="lname">Longtitude:</label>
             <input type="number" id="loninp" name="lname">
             &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;
-            <label>Date: </label>
+            <label>Date and utc time: </label>
             <input type="date" id="date">
             <input type="time" id="time">
-
             <script>
                 function redirect() {
                     var longtitude = document.getElementById('loninp').value
                     var latitude = document.getElementById('latinp').value
+                    var date = document.getElementById('date').value
+                    var time = document.getElementById('time').value
                     if (-90 > latitude || latitude > 90 ){
                         window.alert('latitude must be value between -90 and 90')
                         return 0;
@@ -53,16 +70,33 @@
                         window.alert('longtitude must be value between -180 and 180')
                         return 0;
                     }
-                    var URL = '/?longtitude='+longtitude+'&latitude='+latitude
+                    var URL = '/?longtitude='+longtitude+'&latitude='+latitude+'&date='+date+'&time='+time
                     location.assign(URL)
                 }
             </script>
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;
             <button onclick = "redirect()" > SHOW </button>
+            <br><br>
         </center>
     </div>
-    <center>
-        <img id="map" src='data:image/png;base64,{{ map }}' width="800" height="800"/>
-    </center>
+    <div class="main">
+        {% if welcome %}
+            <div class="welcome">
+                <center>
+                <h1>Welcome to skymap</h1>
+                <h2>enter your location and date and map will show up here</h2>
+                </center>
+            </div>
+        {% else %}
+        <center>
+            <div class="container">
+                <label>SKYMAP</label><br>
+                <b>lat: {{ latitude }}    lon: {{ longtitude }}        {{ date }}  {{ time }}</b><br>
+                <img id="map" src='data:image/png;base64,{{ map }}' width="650" height="650"/>
+            </div>
+        </center>
+        {% endif %}
+    </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
