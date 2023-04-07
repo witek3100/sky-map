@@ -3,10 +3,10 @@ from flask import Flask, render_template, request
 import map
 import datetime
 from skyfield.api import utc
-app = Flask(__name__)
 
+application = Flask(__name__)
 
-@app.route('/')
+@application.route('/')
 def hello_world():
     longtitude = request.args.get('longtitude')
     latitude = request.args.get('latitude')
@@ -32,7 +32,8 @@ def hello_world():
     map_ = map.create_map(lon, lat, utc_dt)
     map_data = base64.b64encode(map_.getbuffer()).decode("ascii")
     time = str(utc_dt.time())
+
     return render_template('main.html', map=map_data, longtitude=lon, latitude=lat, date=utc_dt.date(), time=time[:5])
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    application.run(debug=True, port=5001)

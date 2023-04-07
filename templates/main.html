@@ -91,7 +91,9 @@
         <center>
             <div class="container">
                 <label>SKYMAP</label><br>
-                <b>lat: {{ latitude }}    lon: {{ longtitude }}        {{ date }}  {{ time }}</b><br>
+                <b>lat: {{ latitude }}</b>&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>lon: {{ longtitude }}</b>&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>{{ date }}  {{ time }}</b><br>&nbsp;&nbsp;&nbsp;&nbsp;
                 <img id="map" src='data:image/png;base64,{{ map }}' width="650" height="650"/>
             </div>
         </center>
