@@ -9,3 +9,4 @@ Some of technologies and libraries used
 - Matplotlib - creating sky map
 - Skyfield - python library for working with astronomical data
 - Javascript - handling user input
+- AWS - hosting
