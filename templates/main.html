@@ -41,12 +41,51 @@
             color: cornsilk;
             font-size: 30px;
         }
+        .select {
+            background-color: rgb(30, 30, 30);
+            color: white;
+        }
 
     </style>
 </head>
 <body style="background-color: black">
     <div class="sidenav">
         <center>
+            <select class="select" id="select">
+                <option value="">Select city</option>
+                <option value="52.35 4.873">Amsterdam</option>
+                <option value="52.19 21.06">Warsaw</option>
+                <option value="41.89 12.53">Rome</option>
+                <option value="40.31 -3.69">Madrid</option>
+                <option value="40.43 -73.9">New York</option>
+                <option value="25.62 -80.1">Miami</option>
+                <option value="41.63 -87.5">Chicago</option>
+                <option value="47.46 -122.">Seattle</option>
+                <option value="34.00 -117.">Los Angeles</option>
+                <option value="19.38 -99.0">Mexico</option>
+                <option value="10.30 -66.9">Caracas</option>
+                <option value="-0.21 -78.3">Quito</option>
+                <option value="-23.0 -42.9">Rio De Janiero</option>
+                <option value="-34.6 -58.5">Buenos Aires</option>
+                <option value="-34.0 18.46">Cape Town</option>
+                <option value="-9.15 13.20">Luanda</option>
+                <option value="-4.07 39.70">Mombasa</option>
+                <option value="18.10 -15.9">Dakar</option>
+                <option value="25.24 55.33">Dubai</option>
+                <option value="1.335 103.8">Singapore</option>
+                <option value="14.62 121.1">Manila</option>
+                <option value="39.73 116.3">Pekin</option>
+                <option value="35.71 139.9">Tokio</option>
+                <option value="-33.9 151.0">Sydney</option>
+            </select>
+            <script>
+                document.getElementById("select").addEventListener("change", printMsg);
+                function printMsg() {
+                    document.getElementById('loninp').value = Number(document.getElementById("select").value.slice(-5))
+                    document.getElementById('latinp').value = Number(document.getElementById("select").value.slice(0,5))
+                }
+            </script>
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;
             <label for="fname">Latitude:</label>
             <input type="number" id="latinp" name="fname">
             &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;
